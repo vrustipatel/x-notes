@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigationView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:layout_margin="5dp"
+    android:background="#ffffff"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:background="#f1f1f1"
+                        android:orientation="horizontal">
+
+                        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/profile_drawer"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_margin="15dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/profile"
+                            app:riv_oval="true" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/input_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_medium"
+                                android:text="Rushabh Patel"
+                                android:textColor="#000000"
+                                android:textSize="19sp" />
+
+                            <TextView
+                                android:id="@+id/input_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_medium"
+                                android:text="rushabhpatel381@gmail.com"
+                                android:textColor="#000000"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/all_notes_linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="16sp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/all_notes" />
+
+                        <TextView
+                            android:id="@+id/notes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/sf_pro_display_bold"
+                            android:text="ALL NOTES"
+                            android:textColor="#000000"
+                            android:textSize="13.3sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="388dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_pro_display_medium"
+                            android:letterSpacing="0.0900"
+                            android:text="LABLES"
+                            android:textColor="#99000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/edit_labels_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_pro_display_medium"
+                            android:letterSpacing="0.0900"
+                            android:padding="10dp"
+                            android:text="Edit"
+                            android:textColor="#d3d3d3"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerview_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:clipToPadding="false"
+                        android:layout_marginTop="2dp" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_tag" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/roboto_black"
+                                android:text="+  Add New Label"
+                                android:textColor="#2412ff"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_arrow" />
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/card_add_new_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12sp"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="2dp">
+
+                            <TextView
+                                android:id="@+id/editText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:background="#00000000"
+                                android:fontFamily="@font/sf_pro_display_semibold"
+                                android:hint="+  Add New Label"
+                                android:textColor="#000000"
+                                android:textColorHint="#2412ff"
+                                android:textSize="14sp" />
+
+                        </android.support.v7.widget.CardView>
+
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="15dp"
+                        android:background="#707070" />
+
+                    <LinearLayout
+                        android:id="@+id/list_of_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/notes" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/sf_pro_display_bold"
+                            android:text="NOTES"
+                            android:textColor="#000000"
+                            android:textSize="13.3sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/list_of_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_picture" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/sf_pro_display_bold"
+                            android:text="IMAGES"
+                            android:textColor="#000000"
+                            android:textSize="13.3sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/list_of_Audios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+
+                            android:scaleType="fitXY"
+                            android:src="@drawable/microphone" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/sf_pro_display_bold"
+                            android:text="AUDIO"
+                            android:textColor="#000000"
+                            android:textSize="13.3sp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/list_of_trash_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="16sp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/trash" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/sf_pro_display_bold"
+                            android:text="TRASH"
+                            android:textColor="#000000"
+                            android:textSize="13.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:background="#ffffff"
+            android:fontFamily="@font/sf_pro_display_bold"
+            android:padding="15dp"
+            android:text="LOGOUT"
+            android:textColor="#FF0000"
+            android:textSize="13.5dp" />
+
+    </LinearLayout>
+
+</android.support.design.widget.NavigationView>

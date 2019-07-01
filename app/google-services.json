@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "347102483993",
+    "firebase_url": "https://xnotes-311c4.firebaseio.com",
+    "project_id": "xnotes-311c4",
+    "storage_bucket": "xnotes-311c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347102483993:android:c2d40ec4e8ee9bb5",
+        "android_client_info": {
+          "package_name": "e.wolfsoft1.Xnotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347102483993-6erehn25mlnm4v8nn69u7d3o6lr2rriq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e.wolfsoft1.Xnotes",
+            "certificate_hash": "50a33deadb0f8a32d17d74d36ee8a7188af32017"
+          }
+        },
+        {
+          "client_id": "347102483993-das6j7r7rkb0m75mhasjnodbvcchaklk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVkGg9K2-WtaR68spGSUbC6ZfN8_qDApI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347102483993-das6j7r7rkb0m75mhasjnodbvcchaklk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
