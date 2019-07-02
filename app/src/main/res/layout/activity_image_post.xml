@@ -28,8 +28,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="13.3dp"
                 android:clipToPadding="false"
-                android:paddingBottom="50dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="50dp">
 
 
                 <EditText
@@ -39,6 +39,7 @@
                     android:background="#00000000"
                     android:fontFamily="@font/notoserif_bold"
                     android:hint="Title Goes here"
+                    android:maxLength="80"
                     android:textColor="#000000"
                     android:textColorHint="#7f7f7f"
                     android:textSize="16.7sp" />
@@ -66,33 +67,33 @@
                 <EditText
                     android:id="@+id/note_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="#00000000"
                     android:fontFamily="@font/roboto_medium"
+                    android:gravity="top"
                     android:hint="Enter your description here"
                     android:lineSpacingExtra="5dp"
                     android:textColor="#000000"
                     android:textColorHint="#907f7f7f"
                     android:textSize="13.3sp" />
 
-                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.makeramen.roundedimageview.RoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/upload_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp"
+                    android:elevation="5dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_launcher_background"
                     app:riv_border_color="#d3d3d3"
                     app:riv_border_width="1dp"
                     app:riv_corner_radius="4dp" />
 
-
             </LinearLayout>
 
-
         </ScrollView>
-
     </LinearLayout>
 
     <LinearLayout

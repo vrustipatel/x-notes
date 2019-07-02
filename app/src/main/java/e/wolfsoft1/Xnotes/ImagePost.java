@@ -38,6 +38,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -68,7 +70,7 @@ public class ImagePost extends AppCompatActivity {
 
     private String key, title, content, image, labelKey;
     private Dialog slideDialog;
-        LinearLayout linearLayoutBgColor;
+    LinearLayout linearLayoutBgColor;
     TextView addingNotesInLabel;
     TextView titleToolbar;
     private String tag;
@@ -202,12 +204,12 @@ public class ImagePost extends AppCompatActivity {
 
                                 if (key != null) {
 
-                                    imagePostModel = new NotePostModel(title, content, key, imageurl, null, 0, 0, color, "2", tag, date, labelKey,null,null);
+                                    imagePostModel = new NotePostModel(title, content, key, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null, null);
                                     mDatabaseReference.child(firebaseUser.getUid()).child(key).setValue(imagePostModel);
 
 
                                 } else {
-                                    imagePostModel = new NotePostModel(title, content, newkey, imageurl, null, 0, 0, color, "2", tag, date, labelKey,null,null);
+                                    imagePostModel = new NotePostModel(title, content, newkey, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null, null);
                                     mDatabaseReference.child(firebaseUser.getUid()).child(newkey).setValue(imagePostModel);
                                 }
                                 if (tag != null) {
@@ -256,7 +258,6 @@ public class ImagePost extends AppCompatActivity {
     }
 
     private void deleteExistPost() {
-
         slideDialog = new Dialog(ImagePost.this, R.style.CustomDialogAnimation);
         Window window = slideDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
@@ -267,8 +268,6 @@ public class ImagePost extends AppCompatActivity {
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         slideDialog.getWindow().setAttributes(layoutParams);
-
-
         slideDialog.setCancelable(true);
         slideDialog.setCanceledOnTouchOutside(true);
         slideDialog.show();
@@ -328,10 +327,21 @@ public class ImagePost extends AppCompatActivity {
 
             mImageUri = data.getData();
 
-            Picasso.with(ImagePost.this)
-                    .load(mImageUri)
-                    .into(mImageView);
+            CropImage.activity(mImageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(ImagePost.this);
 
+
+        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                mImageUri = result.getUri();
+
+                Picasso.with(ImagePost.this)
+                        .load(mImageUri)
+                        .into(mImageView);
+                Log.e("aaa", "mImageUri");
+            }
         }
     }
 

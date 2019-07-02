@@ -128,7 +128,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/sf_pro_display_medium"
                             android:letterSpacing="0.0900"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="Edit"
                             android:textColor="#d3d3d3"
                             android:textSize="12sp" />
@@ -273,10 +273,9 @@
 
                         <ImageView
                             android:layout_width="15dp"
-                            android:layout_height="18dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="5dp"
-
                             android:scaleType="fitXY"
                             android:src="@drawable/microphone" />
 

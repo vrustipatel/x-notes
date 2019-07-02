@@ -67,15 +67,16 @@
             android:layout_gravity="center"
             android:background="@drawable/gray_rect"
             android:fontFamily="@font/roboto_regular"
-            android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingTop="3dp"
             android:paddingRight="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:paddingBottom="5dp"
             android:text="label"
             android:textColor="#454545"
-            android:textSize="15sp"
-            android:visibility="gone" />
+            android:textSize="13.7dp"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/recording_completed"
@@ -98,7 +99,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="Date"
-            android:textSize="13.3sp" />
+            android:textSize="12.3sp" />
 
     </LinearLayout>
 

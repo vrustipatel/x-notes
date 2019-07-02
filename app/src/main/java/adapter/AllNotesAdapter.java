@@ -59,13 +59,13 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
 
     private ProgressDialog mProgress;
     private int selecteditem;
-    private Dialog slideDialog;
-    private LinearLayout deletePost;
+
 
     public AllNotesAdapter(Context context, ArrayList<NotePostModel> noteModelArrayList, String trashdata) {
         this.context = context;
         this.noteModelArrayList = noteModelArrayList;
     }
+
 
     @NonNull
     @Override
@@ -112,15 +112,17 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
         final String selectinput = noteModel.getSelectinput();
         final String label = noteModel.getLabelTag();
 
-
         if (label != null) {
+
             viewHolder.labelTag.setVisibility(View.VISIBLE);
             viewHolder.labelTag.setText(label);
 
         } else {
+
             viewHolder.labelTag.setVisibility(View.GONE);
 
         }
+
         LinearLayout.LayoutParams paramscontent = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         if (image != null) {
@@ -161,9 +163,20 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             viewHolder.record.setVisibility(View.VISIBLE);
             viewHolder.timeLength.setVisibility(View.VISIBLE);
 
-            if (noteModel.getTimeLengthMinutes() > 9) {
-                viewHolder.timeLength.setText(String.valueOf(voice));
+            if (!isLongClickEnabled) {
 
+            } else {
+                if (noteModel.isSelected()) {
+                    viewHolder.linearLayout.setBackgroundResource(R.drawable.gray_rect);
+                } else {
+                    viewHolder.linearLayout.setBackgroundResource(0);
+                    viewHolder.linearLayout.setBackgroundColor(Color.parseColor(color));
+                }
+            }
+
+            if (noteModel.getTimeLengthMinutes() > 9) {
+
+                viewHolder.timeLength.setText(String.valueOf(voice));
             } else {
 
                 viewHolder.timeLength.setText(String.valueOf("0" + voice));
@@ -244,7 +257,6 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
 
                         if (isLongClickEnabled != true) {
 
-                            deletedTrashPost();
                         }
 
                     } else {
@@ -273,7 +285,7 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                                 intent.putExtra("color", color);
                                 Log.e("fdsf", "fsd" + key);
                                 intent.putExtra("selectinput", selectinput);
-                                intent.putExtra("tagname", label);
+                                intent.putExtra("labelTag", label);
                                 context.startActivity(intent);
 
                             } else {
@@ -340,69 +352,15 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                     }
                 }
             });
-//
-//            viewHolder.record.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mProgress = new ProgressDialog(context);
-//
-//                    try {
-//                        PlaybackFragment playbackFragment =
-//                                new PlaybackFragment().newInstance(noteModelArrayList.get(i));
-//
-//                        FragmentTransaction transaction = ((FragmentActivity) context)
-//                                .getSupportFragmentManager()
-//                                .beginTransaction();
-//
-//                        playbackFragment.show(transaction, "dialog_playback");
-//
-//                    } catch (Exception e) {
-//
-//                        Log.e(LOG_TAG, "exception", e);
-//                    }
-//
-//                }
-//
-//            });
-
 
         } else if (trashdata != null) {
-
 
         }
 
     }
 
-    private void deletedTrashPost() {
-
-        slideDialog = new Dialog(context, R.style.CustomDialogAnimation);
-        Window window = slideDialog.getWindow();
-        window.setGravity(Gravity.BOTTOM);
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        slideDialog.setContentView(R.layout.dialog_delete_post);
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(slideDialog.getWindow().getAttributes());
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        slideDialog.getWindow().setAttributes(layoutParams);
-
-
-        slideDialog.setCancelable(true);
-        slideDialog.setCanceledOnTouchOutside(true);
-        slideDialog.show();
-        deletePost = slideDialog.findViewById(R.id.delete_post_linear);
-
-        deletePost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteImageNote();
-            }
-        });
-
-    }
-
     private void deleteImageNote() {
-        fNotesDatabase.child(key).removeValue();
+        fNotesDatabase.removeValue();
 
     }
 
@@ -470,6 +428,7 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             }
         }
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

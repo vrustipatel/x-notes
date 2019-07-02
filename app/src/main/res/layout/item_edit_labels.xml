@@ -57,13 +57,29 @@
             android:background="#00000000"
             android:fontFamily="@font/roboto_bold"
             android:ellipsize="end"
-            android:maxLength="200"
+            android:maxLength="70"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="New Ideas"
             android:textColor="#000000"
             android:textSize="15sp" />
-
+        <TextView
+            android:id="@+id/label_created_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="9dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:fontFamily="@font/roboto_bold"
+            android:ellipsize="end"
+            android:maxLength="200"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="New Ideas"
+            android:visibility="gone"
+            android:textColor="#000000"
+            android:textSize="15sp" />
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

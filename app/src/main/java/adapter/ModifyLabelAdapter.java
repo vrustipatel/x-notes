@@ -24,10 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import e.wolfsoft1.Xnotes.LabelCreation;
 import e.wolfsoft1.Xnotes.MainActivity;
 import e.wolfsoft1.Xnotes.R;
-import e.wolfsoft1.Xnotes.TrashActivity;
 import model.ModifyLabelModeL;
 
 public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.ViewHolder> {
@@ -40,7 +38,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
     FirebaseAuth fAuth;
     String data;
-    private DatabaseReference fNoteDatabaseRef, labelDBreference;
+    private DatabaseReference fNoteLabelsDBref, fNotesDBref;
     Intent intent;
     private String text;
 
@@ -65,8 +63,8 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
         //firebase tables
         fAuth = FirebaseAuth.getInstance();
-        fNoteDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Labels").child(fAuth.getCurrentUser().getUid());
-        labelDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+        fNoteLabelsDBref = FirebaseDatabase.getInstance().getReference().child("Labels").child(fAuth.getCurrentUser().getUid());
+        fNotesDBref = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
 
         viewHolder.delete.setVisibility(View.GONE);
 
@@ -74,56 +72,48 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
         final ModifyLabelModeL editLabelModeL = editLabelModeLS.get(i);
         final String key = editLabelModeL.getKey();
+        final String tag = editLabelModeL.getLabelCreated();
 
         viewHolder.labelCreated.setText(editLabelModeLS.get(i).getLabelCreated());
 
         /*---------------show content in navigation drawer------------------*/
 
-
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (context instanceof MainActivity){
-                    final String tag = editLabelModeL.getLabelCreated();
-                    ((MainActivity) context).releseItem();
-//                    intent = new Intent(context, MainActivity.class);
-//                    intent.putExtra("labelTag", tag);
-//                    intent.putExtra("key", key);
-//                    intent.putExtra("labelkey", key);
-//                    context.startActivity(intent);
-                    ((MainActivity) context).updateSomething(tag,key);
-                }
-                else {
-
-                }
-
-
-            }
-        });
-
         if (context instanceof MainActivity) {
 
+            viewHolder.labelText.setVisibility(View.VISIBLE);
+            viewHolder.labelCreated.setVisibility(View.GONE);
             viewHolder.edit.setVisibility(View.GONE);
             viewHolder.tagLabel.setImageResource(R.drawable.ic_tag);
-            viewHolder.labelCreated.setEnabled(false);
             viewHolder.done.setVisibility(View.GONE);
             viewHolder.delete.setVisibility(View.GONE);
             viewHolder.line1.setVisibility(View.GONE);
             viewHolder.line2.setVisibility(View.GONE);
-            viewHolder.labelCreated.setSingleLine(true);
-            viewHolder.labelCreated.setMaxLines(1);
-            viewHolder.labelCreated.setKeyListener(null);
+            viewHolder.labelText.setText(editLabelModeLS.get(i).getLabelCreated());
+            viewHolder.labelText.setSingleLine(true);
+            viewHolder.labelText.setMaxLines(1);
 
-//            if(editLabelModeL.getLabelCreated().length()>2){
-//
-////                text  =  text.substring(0,4)+"...";
-//
-//                viewHolder.labelCreated.setText(text);
-//            }else{
-//
-//                viewHolder.labelCreated.setText(text);
-//
-//            }
+            ((MainActivity) context).releseItem();
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    intent = new Intent(context, MainActivity.class);
+
+                    intent.putExtra("labelTag", tag);
+                    intent.putExtra("key", key);
+                    intent.putExtra("labelkey", key);
+
+//                    set the new task and clear flags
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    context.startActivity(intent);
+
+                    ((MainActivity) context).closeDrawer();
+
+                }
+            });
+
             LinearLayout.LayoutParams paramscontent = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramscontent.setMargins(10, 0, 20, 0);
 
@@ -133,7 +123,6 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
         } else {
 
             //display content in label creation activity
-
 
             viewHolder.labelCreated.setSingleLine(false);
             if (isEnable) {
@@ -161,7 +150,13 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                         viewHolder.line1.setVisibility(View.VISIBLE);
                         viewHolder.line2.setVisibility(View.VISIBLE);
 
-                        data = s.toString();
+                        if (editLabelModeL.getLabelCreated().length() > 70) {
+                            viewHolder.labelCreated.setError("Label should be between 1 and 70 characters in length");
+                            viewHolder.labelCreated.requestFocus();
+                        } else {
+                            data = s.toString();
+                        }
+
                     }
 
                     @Override
@@ -193,13 +188,13 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                         notifyItemRemoved(i);
                         notifyItemChanged(i, editLabelModeLS.size());
 
-                        labelDBreference.orderByChild("labelKey").equalTo(key).addValueEventListener(new ValueEventListener() {
+                        fNotesDBref.orderByChild("labelKey").equalTo(key).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                     String labelKey = (String) snapshot.child("key").getValue();
-                                    labelDBreference.child(labelKey).removeValue();
+                                    fNotesDBref.child(labelKey).removeValue();
                                 }
                             }
 
@@ -208,7 +203,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
                             }
                         });
-                        fNoteDatabaseRef.child(editLabelModeL.getKey()).removeValue();
+                        fNoteLabelsDBref.child(editLabelModeL.getKey()).removeValue();
                     }
                 });
 
@@ -216,18 +211,21 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                 viewHolder.done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         viewHolder.line1.setVisibility(View.GONE);
                         viewHolder.line2.setVisibility(View.GONE);
+                        viewHolder.done.setVisibility(View.GONE);
+                        viewHolder.delete.setVisibility(View.GONE);
                         viewHolder.tagLabel.setVisibility(View.VISIBLE);
                         viewHolder.edit.setVisibility(View.VISIBLE);
 
-                        fNoteDatabaseRef.orderByChild("labelCreated").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
+                        fNoteLabelsDBref.orderByChild("labelCreated").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                 if (!dataSnapshot.exists()) {
 
-                                    fNoteDatabaseRef.child(key).child("labelCreated").setValue(data);
+                                    fNoteLabelsDBref.child(key).child("labelCreated").setValue(data);
 
                                 } else {
                                     Toast.makeText(context, "label is already defined", Toast.LENGTH_SHORT).show();
@@ -240,14 +238,14 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
                             }
                         });
-                        labelDBreference.orderByChild("labelKey").equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                        fNotesDBref.orderByChild("labelKey").equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                     String mainKey = (String) snapshot.child("key").getValue();
-                                    labelDBreference.child(mainKey).child("labelTag").setValue(data);
+                                    fNotesDBref.child(mainKey).child("labelTag").setValue(data);
 
                                 }
                             }
@@ -274,10 +272,6 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
     }
 
-//    private void deleteNote(String key) {
-//        fNoteDatabaseRef.child(key).removeValue();
-//    }
-
     @Override
     public int getItemCount() {
         return editLabelModeLS.size();
@@ -286,6 +280,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         EditText labelCreated;
+        TextView labelText;
         LinearLayout labelLayout;
         View line1, line2;
         ImageView tagLabel, edit, done, delete;
@@ -294,6 +289,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
             super(itemView);
 
             labelCreated = itemView.findViewById(R.id.label_created);
+            labelText = itemView.findViewById(R.id.label_created_text);
             edit = itemView.findViewById(R.id.label_edit);
             tagLabel = itemView.findViewById(R.id.tag_label);
             labelLayout = itemView.findViewById(R.id.label_layout);

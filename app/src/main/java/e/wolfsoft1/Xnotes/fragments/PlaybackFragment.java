@@ -52,6 +52,7 @@ public class PlaybackFragment extends DialogFragment {
     private boolean isPlaying = false;
 
     //stores minutes and seconds of the length of the file.
+
     long minutes = 0;
     long seconds = 0;
 
@@ -88,8 +89,6 @@ public class PlaybackFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_media_playback, null);
 
-        mProgress = new ProgressDialog(getContext());
-        mProgress.setMessage("loading");
 
         mFileNameTextView = (TextView) view.findViewById(R.id.file_name_text_view);
         mFileLengthTextView = (TextView) view.findViewById(R.id.file_length_text_view);
@@ -147,12 +146,10 @@ public class PlaybackFragment extends DialogFragment {
         });
 
         mPlayButton = (ImageView) view.findViewById(R.id.fab_play);
+
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                mProgress.show();
-//                mProgress.setMessage("not working");
 
                 onPlay(isPlaying);
                 isPlaying = !isPlaying;
@@ -211,7 +208,7 @@ public class PlaybackFragment extends DialogFragment {
             //currently MediaPlayer is not playing audio
 
             if (mMediaPlayer == null) {
-                mProgress.show();
+//                mProgress.show();
 
                 startPlaying(); //start from beginning
 
@@ -226,9 +223,12 @@ public class PlaybackFragment extends DialogFragment {
     }
 
     private void startPlaying() {
-
+        mProgress = new ProgressDialog(getContext());
+        mProgress.setMessage("loading");
+        mProgress.show();
         mPlayButton.setImageResource(R.drawable.ic_media_pause);
         mMediaPlayer = new MediaPlayer();
+
 
         try {
             mMediaPlayer.setDataSource(item.getRecord());

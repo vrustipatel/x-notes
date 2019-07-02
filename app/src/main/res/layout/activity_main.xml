@@ -71,12 +71,13 @@
 
                             <ImageView
                                 android:id="@+id/search"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_gravity="center"
                                 android:padding="10dp"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/ic_search_black" />
+                                android:tint="#454545"
+                                android:src="@drawable/ic_search" />
 
                             <ImageView
                                 android:id="@+id/grid_menu"
@@ -219,7 +220,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:overScrollMode="never">
 
                 <LinearLayout
                     android:layout_width="match_parent"

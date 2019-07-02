@@ -80,6 +80,7 @@ public class NotesPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note_post);
 
+
         /*---------------------------Firebase Tabels---------------------------------------*/
 
         fAuth = FirebaseAuth.getInstance();
@@ -92,70 +93,17 @@ public class NotesPostActivity extends AppCompatActivity {
         titleToolbar.setText(null);
         labelkey = getIntent().getStringExtra("labelkey");
 
-        //
-        selectCustomFontStyle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (position == 0) {
-                    Typeface font_style = ResourcesCompat.getFont(NotesPostActivity.this, R.font.roboto_bold);
-                    edTitle.setTypeface(font_style);
-                    fontStyleType = "roboto_bold.ttf";
-                    position = 1;
-
-                } else if (position == 1) {
-
-                    Typeface font_style = ResourcesCompat.getFont(NotesPostActivity.this, R.font.roboto_italic);
-                    edTitle.setTypeface(font_style);
-                    fontStyleType = "roboto_bold.ttf";
-
-                    position = 2;
-
-                } else if (position == 2) {
-
-                    Typeface font_style = ResourcesCompat.getFont(NotesPostActivity.this, R.font.sf_pro_display_light);
-                    edTitle.setTypeface(font_style);
-                    fontStyleType = "roboto_bold.ttf";
-                    position = 3;
-
-                } else {
-                    Typeface font_style = ResourcesCompat.getFont(NotesPostActivity.this, R.font.notoserif_bold);
-                    Typeface font_style_content = ResourcesCompat.getFont(NotesPostActivity.this, R.font.roboto_regular);
-                    edTitle.setTypeface(font_style);
-                    edContent.setTypeface(font_style_content);
-                    fontStyleType = "notoserif_bold.ttf";
-                    position = 0;
-
-                }
-            }
-        });
-
         try {
-
 
             Intent intent = getIntent();
             key = intent.getStringExtra("key");
             title = intent.getStringExtra("title");
             tag = intent.getStringExtra("labelTag");
-            nameoftag = intent.getStringExtra("tagname");
-
-            if (intent.getStringExtra("tagname") != null) {
-
-                tagName.setVisibility(View.VISIBLE);
-                tagName.setText(nameoftag);
-
-                Toast.makeText(this, nameoftag, Toast.LENGTH_SHORT).show();
-
-
-            } else {
-
-            }
 
             if (intent.getStringExtra("color") != null) {
                 color = intent.getStringExtra("color");
             }
             content = intent.getStringExtra("content");
-//            date = intent.getStringExtra("date");
 
 
             if (key.equals("no")) {
@@ -174,13 +122,9 @@ public class NotesPostActivity extends AppCompatActivity {
         if (tag != null) {
 
             tagName.setVisibility(View.VISIBLE);
+            addingNotesInLabel.setVisibility(View.VISIBLE);
+
             tagName.setText(" \"" + tag + "\" ");
-
-        } else {
-
-            tagName.setVisibility(View.GONE);
-            addingNotesInLabel.setVisibility(View.GONE);
-
         }
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy  hh:mm a");
@@ -197,7 +141,6 @@ public class NotesPostActivity extends AppCompatActivity {
         putData();
 
         selectColorForCustomLayout();
-//        edContent.setTextIsSelectable(true);
 
         edContent.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
 
@@ -245,8 +188,8 @@ public class NotesPostActivity extends AppCompatActivity {
                 if (validResIdList != null && validResIdList.size() > 0) {
 
                     if (item.getItemId() == validResIdList.get(0)) {
-//                        ErrorController.showToast(NotesPostActivity.this, "View Vocab : " + edContent.getText().toString().substring(edContent.getSelectionStart(), edContent.getSelectionEnd()));
 
+//                        ErrorController.showToast(NotesPostActivity.this, "View Vocab : " + edContent.getText().toString().substring(edContent.getSelectionStart(), edContent.getSelectionEnd()));
                         mode.finish();
 
                     } else if (item.getItemId() == validResIdList.get(1)) {//cpy
@@ -282,7 +225,6 @@ public class NotesPostActivity extends AppCompatActivity {
         addingNotesInLabel = findViewById(R.id.adding_notes_in_label);
         back = findViewById(R.id.back);
         trashIcon = findViewById(R.id.trash_icon);
-        selectCustomFontStyle = findViewById(R.id.select_custom_font_style);
     }
 
     private void deleteExistPost() {
@@ -357,7 +299,66 @@ public class NotesPostActivity extends AppCompatActivity {
                 fNotesDBreference.child(key).updateChildren(updateMap);
                 Toast.makeText(NotesPostActivity.this, "Note updated", Toast.LENGTH_SHORT).show();
 
-                finish();
+            } else {
+
+                //create a new note
+                final String key = fNotesDBreference.push().getKey();
+                final NotePostModel noteModel = new NotePostModel();
+
+                noteModel.setTitle(title);
+                noteModel.setContent(content);
+                noteModel.setKey(key);
+                noteModel.setSelectColorImg(color);
+                noteModel.setSelectinput("1");
+                noteModel.setDate(strDate);
+                noteModel.setLabelKey(labelkey);
+                postEditedTime.setVisibility(View.GONE);
+
+                if (tag != null) {
+                    noteModel.setLabelTag(tag);
+
+                } else {
+                    addingNotesInLabel.setVisibility(View.GONE);
+
+                    tagName.setVisibility(View.GONE);
+                }
+
+                fNotesDBreference.child(key).setValue(noteModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+//                            Intent intent = new Intent(NotesPostActivity.this, MainActivity.class);
+//                            startActivity(intent);
+                        } else {
+                            Toast.makeText(NotesPostActivity.this, "ERROR:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(this, "USER ISNOT SIGNIN", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void create(String title, String content) {
+
+        if (fAuth.getCurrentUser() != null) {
+            if (isExist) {
+
+                //update a existing note
+                postEditedTime.setVisibility(View.VISIBLE);
+                trashIcon.setVisibility(View.VISIBLE);
+                Map updateMap = new HashMap();
+
+                updateMap.put("title", edTitle.getText().toString().trim());
+                updateMap.put("content", edContent.getText().toString().trim());
+                updateMap.put("selectColorImg", color);
+                linearLayoutBgColor.setBackgroundColor(Color.parseColor(color));
+
+                fNotesDBreference.child(key).updateChildren(updateMap);
+                Toast.makeText(NotesPostActivity.this, "Note updated", Toast.LENGTH_SHORT).show();
+
 
             } else {
 
@@ -403,6 +404,7 @@ public class NotesPostActivity extends AppCompatActivity {
     }
 
     private void putData() {
+
         if (isExist) {
             fNotesDBreference.child(key).addValueEventListener(new ValueEventListener() {
                 @Override

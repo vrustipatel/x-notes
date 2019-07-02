@@ -76,6 +76,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -97,7 +99,7 @@ import adapter.AllNotesAdapter;
 import model.ModifyLabelModeL;
 import model.NotePostModel;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     //variable initialization
     private static final int PERM_REQ_CODE = 23;
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int inc;
     String labelkey;
 
-    ImageView profileImg, profileDrawer;
+    ImageView profileDrawer;
     CardView cardAddNewLabel;
     Button done;
     String trashdata;
@@ -198,7 +200,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /*----------------------------------get labelwise data like folder---------------------------*/
 
+
+//        drawerLayout.closeDrawer(navigationView);
+
         if (tag != null) {
+
             nameOfTag.setText(tag);
             nameOfTag.setSingleLine(true);
             nameOfTag.setMaxLines(1);
@@ -212,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             loadData();
         }
 
+
         /*----------------------------------------get gmail Id,username & user profile -----------------------------------*/
 
         inputEmail.setText(fAuth.getCurrentUser().getEmail());
@@ -222,21 +229,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (arePermissionsEnabled()) {
         } else {
-//            permissions = new String[]{Manifest.permission.CAMERA};
             requestMultiplePermissions();
         }
 
         if (checkStoragePermission()) {
-//            audioRecord();
         } else {
             requestAudioPermission();
-//            audioRecord();
         }
         /*------------------------------------click listeners---------------------------------------*/
 
         clickListeneres();
 
         /*------------------------------------retrive all type of notes here-----------------------------------------*/
+
 
         loadData();
 
@@ -255,7 +260,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    private void initializeMethod() {
+
+        /*-----------------------------------firebase Tables----------------------------------------*/
+
+        fAuth = FirebaseAuth.getInstance();
+        fNoteDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+
+        recordDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+        mStorageReference = FirebaseStorage.getInstance().getReference().child("Audio");
+
+
+        Intent intent = getIntent();
+        tag = intent.getStringExtra("labelTag");
+
+        /*------------------------------- findViewById--------------------------------------*/
+
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        expandedMenu = findViewById(R.id.expanded_menu);
+        addNotes = findViewById(R.id.add_notes);
+        chooseImage = findViewById(R.id.choose_image);
+        cardviewDrawer = findViewById(R.id.cardview_drawer);
+        cardviewShowUpdates = findViewById(R.id.cardview_show_updates);
+        cardviewSearchNotes = findViewById(R.id.cardview_search_notes);
+        voiceRecorder = findViewById(R.id.voice_recorder);
+        profileDrawer = findViewById(R.id.profile_drawer);
+        cardAddNewLabel = findViewById(R.id.card_add_new_label);
+        inputName = findViewById(R.id.input_name);
+        inputEmail = findViewById(R.id.input_email);
+        gridMenu = findViewById(R.id.grid_menu);
+        cancel = findViewById(R.id.cancel);
+        delete = findViewById(R.id.delete_all);
+        selectAll = findViewById(R.id.select_all);
+        createNewLabel = findViewById(R.id.create_new_label);
+        listOfImages = findViewById(R.id.list_of_images);
+        listOfText = findViewById(R.id.list_of_text);
+        listOfAudios = findViewById(R.id.list_of_Audios);
+        listOfTrashData = findViewById(R.id.list_of_trash_data);
+        editlabelstxt = findViewById(R.id.edit_labels_txt);
+        nameOfTag = findViewById(R.id.name_of_tag);
+        emptyState = findViewById(R.id.empty_state);
+        allNotesLinear = findViewById(R.id.all_notes_linear);
+        emptyStateText = findViewById(R.id.empty_state_text);
+        search = findViewById(R.id.search);
+        searchNotesTxt = findViewById(R.id.search_notes_txt);
+
+        /*---------------------------------- load the animation---------------------------*/
+
+        animFadein = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+
+        /*---------------------------------start the animation------------------------------*/
+
+
+        nameOfTag.startAnimation(animFadein);
+
+    }
+
     private void clickListeneres() {
+
+        expandedMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(navigationView)) {
+                    drawerLayout.closeDrawer(navigationView);
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                }
+            }
+        });
 
         allNotesLinear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -425,6 +501,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         filter(searchNotesTxt.getText().toString());
     }
 
+
+    /*---------------------------------Search notes--------------------------------*/
+
+    private void filter(String s) {
+
+        ArrayList<NotePostModel> filteredlist = new ArrayList<>();
+        for (NotePostModel model : postModel) {
+            if ((model.getTitle() != null && model.getTitle().toLowerCase().contains(s.toLowerCase())) || (model.getContent() != null && model.getContent().toLowerCase().contains(s.toLowerCase()))) {
+                filteredlist.add(model);
+            }
+
+        }
+        notesAdapter.updateData(filteredlist);
+    }
+
+
     /*----------------------------Open Gallery-------------------------------------*/
 
 
@@ -436,32 +528,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /*---------------------------------Search notes--------------------------------*/
-
-
-    private void filter(String s) {
-
-//        Pattern pattern = Pattern.compile(s.toLowerCase());
-//        Matcher matcher = pattern.matcher(s.toLowerCase());
-//        SpannableString spannableString = new SpannableString(title);
-
-        ArrayList<NotePostModel> filteredlist = new ArrayList<>();
-        for (NotePostModel model : postModel) {
-            if (model.getTitle() != null && model.getTitle().toLowerCase().contains(s.toLowerCase())) {
-
-                filteredlist.add(model);
-            }
-
-        }
-        notesAdapter.updateData(filteredlist);
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == 101) {
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     if (shouldShowRequestPermissionRationale(permissions[i])) {
@@ -492,21 +564,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            mImageUri = data.getData();
-
-            Picasso.with(MainActivity.this)
-                    .load(mImageUri);
-
-            Intent intentIMG = new Intent(MainActivity.this, ImagePost.class);
-            intentIMG.putExtra("labelTag", tag);
-            intentIMG.putExtra("imageUri", mImageUri);
-            intentIMG.putExtra("labelkey", labelkey);
-
-            startActivity(intentIMG);
-
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -515,9 +573,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             byte[] byteArray = stream.toByteArray();
 
             /*-------------------------stored captured image in external directory------------------------*/
+
             if (byteArray != null) {
                 FileOutputStream outStream = null;
                 String cameraPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+
                 try {
                     outStream = new FileOutputStream(String.format(cameraPath + "/Camera/%d.jpg", System.currentTimeMillis()));
                     outStream.write(byteArray);
@@ -539,117 +599,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri mImageUri = data.getData();
+
+            CropImage.activity(mImageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(MainActivity.this);
+
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                mImageUri = result.getUri();
+
+                Intent intentIMG = new Intent(MainActivity.this, ImagePost.class);
+                intentIMG.putExtra("labelTag", tag);
+                intentIMG.putExtra("imageUri", mImageUri);
+                intentIMG.putExtra("labelkey", labelkey);
+                startActivity(intentIMG);
+
+                Log.e("aaa", "mImageUri");
+            }
         }
 
-
     }
-
-
-    private void initializeMethod() {
-        /*-----------------------------------firebase Tables----------------------------------------*/
-
-        fAuth = FirebaseAuth.getInstance();
-        fNoteDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
-
-        recordDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
-        mStorageReference = FirebaseStorage.getInstance().getReference().child("Audio");
-
-
-        Intent intent = getIntent();
-        tag = intent.getStringExtra("labelTag");
-
-        /*------------------------------- findViewById--------------------------------------*/
-
-
-        drawerLayout = findViewById(R.id.drawerLayout);
-        navigationView = findViewById(R.id.navigationView);
-        expandedMenu = findViewById(R.id.expanded_menu);
-        addNotes = findViewById(R.id.add_notes);
-        chooseImage = findViewById(R.id.choose_image);
-        cardviewDrawer = findViewById(R.id.cardview_drawer);
-        cardviewShowUpdates = findViewById(R.id.cardview_show_updates);
-        cardviewSearchNotes = findViewById(R.id.cardview_search_notes);
-        voiceRecorder = findViewById(R.id.voice_recorder);
-//        profileImg = findViewById(R.id.profile_img);
-        profileDrawer = findViewById(R.id.profile_drawer);
-        cardAddNewLabel = findViewById(R.id.card_add_new_label);
-        inputName = findViewById(R.id.input_name);
-        inputEmail = findViewById(R.id.input_email);
-        gridMenu = findViewById(R.id.grid_menu);
-        cancel = findViewById(R.id.cancel);
-        delete = findViewById(R.id.delete_all);
-        selectAll = findViewById(R.id.select_all);
-        createNewLabel = findViewById(R.id.create_new_label);
-        listOfImages = findViewById(R.id.list_of_images);
-        listOfText = findViewById(R.id.list_of_text);
-        listOfAudios = findViewById(R.id.list_of_Audios);
-        listOfTrashData = findViewById(R.id.list_of_trash_data);
-        editlabelstxt = findViewById(R.id.edit_labels_txt);
-        nameOfTag = findViewById(R.id.name_of_tag);
-        emptyState = findViewById(R.id.empty_state);
-        allNotesLinear = findViewById(R.id.all_notes_linear);
-        emptyStateText = findViewById(R.id.empty_state_text);
-        search = findViewById(R.id.search);
-        searchNotesTxt = findViewById(R.id.search_notes_txt);
-
-        expandedMenu.setOnClickListener(this);
-
-        /*---------------------------------- load the animation---------------------------*/
-
-        animFadein = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.fade_in);
-
-        /*---------------------------------start the animation------------------------------*/
-
-
-        nameOfTag.startAnimation(animFadein);
-
-    }
-
-    private void logOut() {
-
-        builder = new AlertDialog.Builder(MainActivity.this);
-
-        /*-------------------------------Setting message manually and performing action on button click-------------------------------------------*/
-
-        builder.setMessage("Are you sure you want to Log out")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        fAuth.signOut();
-
-                        finish();
-                        Toast.makeText(getApplicationContext(), "you choose yes action for alertbox",
-                                Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(MainActivity.this, GoogleSignin.class);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        /*------------------------------- Action for 'NO' Button--------------------*/
-
-                        dialog.cancel();
-                        drawerLayout.closeDrawer(navigationView);
-
-                    }
-                });
-
-        /*------------------------Creating dialog box---------------------------------*/
-
-
-        AlertDialog alert = builder.create();
-
-        /*---------------------------------Setting the title manually------------------*/
-
-
-        alert.setTitle("Log Out");
-        alert.show();
-
-    }
-
 
     /*------------------------------------record audio notes--------------------------*/
 
@@ -699,12 +673,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/recorded_audio.mp3";
 
-        mButtonRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isOnClicked = true;
-            }
-        });
+//        mButtonRecord.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isOnClicked = true;
+//            }
+//        });
 
 
         mButtonRecord.setOnTouchListener(new View.OnTouchListener() {
@@ -850,6 +824,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     if (!dataSnapshot.exists()) {
+
                         emptyState.setVisibility(View.VISIBLE);
                         emptyStateText.setVisibility(View.VISIBLE);
                     } else {
@@ -900,16 +875,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
+
     /*-----------------------------------open and close navigation drawer on onclick----------------*/
 
-    @Override
-    public void onClick(View v) {
-        if (drawerLayout.isDrawerOpen(navigationView)) {
-            drawerLayout.closeDrawer(navigationView);
-        } else {
-            drawerLayout.openDrawer(navigationView);
-        }
-    }
 
     private void createLabelDatas() {
 
@@ -1069,93 +1037,93 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public void deleteAllData() {
+    public void closeDrawer() {
 
-        fNoteDBreference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    NotePostModel model = snapshot.getValue(NotePostModel.class);
+        drawerLayout.closeDrawer(navigationView);
 
-                    DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(fAuth.getCurrentUser().getUid());
-                    String Dkey = trashReference.push().getKey();
-                    trashReference.child(Dkey).setValue(model);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        fNoteDBreference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if (task.isSuccessful()) {
-
-                    Toast.makeText(MainActivity.this, "Notes deleted", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    Toast.makeText(MainActivity.this, "Error:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-        });
     }
+
+    private void logOut() {
+
+        builder = new AlertDialog.Builder(MainActivity.this);
+
+        /*-------------------------------Setting message manually and performing action on button click-------------------------------------------*/
+
+        builder.setMessage("Are you sure you want to Log out")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        fAuth.signOut();
+
+                        finish();
+                        Toast.makeText(getApplicationContext(), "you choose yes action for alertbox",
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(MainActivity.this, GoogleSignin.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        /*------------------------------- Action for 'NO' Button--------------------*/
+
+                        dialog.cancel();
+//                        drawerLayout.closeDrawer(navigationView);
+
+                    }
+                });
+
+        /*------------------------Creating dialog box---------------------------------*/
+
+
+        AlertDialog alert = builder.create();
+
+        /*---------------------------------Setting the title manually------------------*/
+
+
+        alert.setTitle("Log Out");
+        alert.show();
+    }
+
+
+
 
     /*--------------------mobile button backpress confirmation dialog--------------------*/
 
     @Override
     public void onBackPressed() {
 
-        drawerLayout.closeDrawer(navigationView);
-//            builder = new AlertDialog.Builder(this);
-
-
-        /*--------Setting message manually and performing action on button click----------*/
-
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        System.exit(0);
-                    }
-                }).create().show();
-
-        cardviewSearchNotes.setVisibility(View.GONE);
-        cardviewDrawer.setVisibility(View.VISIBLE);
-        searchNotesTxt.setText("");
-
-
-    }
-
-    public void updateSomething(String tag, String key) {
-        labelkey = key;
-
         if (tag != null) {
-            nameOfTag.setText(tag);
-            nameOfTag.setSingleLine(true);
-            nameOfTag.setMaxLines(1);
-            nameOfTag.setEllipsize(TextUtils.TruncateAt.END);
 
-            query = fNoteDBreference.orderByChild("labelTag")
-                    .equalTo(tag);
-            loadData();
+            finish();
+
         } else {
-            query = fNoteDBreference;
-            loadData();
+
+            drawerLayout.closeDrawer(navigationView);
+
+            /*--------Setting message manually and performing action on button click----------*/
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Really Exit?")
+                    .setMessage("Are you sure you want to exit?")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            System.exit(0);
+                        }
+                    }).create().show();
+
+            cardviewSearchNotes.setVisibility(View.GONE);
+            cardviewDrawer.setVisibility(View.VISIBLE);
+            searchNotesTxt.setText("");
+
         }
     }
+
 }

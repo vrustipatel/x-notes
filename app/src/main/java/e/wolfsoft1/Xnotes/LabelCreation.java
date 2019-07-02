@@ -51,7 +51,6 @@ public class LabelCreation extends AppCompatActivity {
 
         /*-------------------------------------Firebase Tabels---------------------------------*/
 
-
         fAuth = FirebaseAuth.getInstance();
         fNoteDBReference = FirebaseDatabase.getInstance().getReference().child("Labels").child(fAuth.getCurrentUser().getUid());
 
@@ -92,37 +91,17 @@ public class LabelCreation extends AppCompatActivity {
             }
         });
 
-        editLabels.setMaxLines(3);
+        editLabels.setMaxLines(2);
 
         if (editLabels.length() < 1 ||
-                editLabels.length() > 200) {
+                editLabels.length() > 70) {
 
-            editLabels.setError("Label should be between 1 and 200 characters in length");
+            editLabels.setError("Label should be between 1 and 100 characters in length");
 
             editLabels.requestFocus();
         } else {
             String text = editLabels.getText().toString();
         }
-
-//        editLabels.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    if (editLabels.getText().toString().trim().length() < 5) {
-//                    } else {
-//                        // your code here
-//                        editLabels.setError(null);
-//                    }
-//                } else {
-//                    if (editLabels.getText().toString().trim().length() < 5) {
-//                    } else {
-//                        // your code here
-//                        editLabels.setError(null);
-//                    }
-//                }
-//
-//            }
-//        });
 
     }
 
@@ -177,8 +156,6 @@ public class LabelCreation extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
 
-//                    if (!title.isEmpty())
-//                    {
                     fNoteDBReference.child(key).setValue(modeL);
 
                 } else {
