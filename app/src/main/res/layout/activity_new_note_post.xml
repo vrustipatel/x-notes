@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear_layout"
     android:layout_width="match_parent"
@@ -20,7 +19,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,8 +32,8 @@
                 android:layout_marginRight="13.3dp"
                 android:layout_marginBottom="10dp"
                 android:clipToPadding="false"
-                android:orientation="vertical"
-                android:paddingBottom="120dp">
+                android:paddingBottom="50dp"
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/new_note_title"
@@ -40,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:background="#00000000"
                     android:fontFamily="@font/notoserif_bold"
+                    android:padding="10dp"
                     android:hint="Title Goes here"
                     android:maxLength="80"
                     android:textColor="#000000"
@@ -50,7 +52,6 @@
                     android:id="@+id/time_and_date_of_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text=""
                     android:textColor="#80000000"
@@ -58,10 +59,9 @@
                     android:visibility="gone" />
 
                 <View
-                    android:id="@+id/viewline"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_marginTop="20sp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20sp"
                     android:background="#807f7f7f" />
 
@@ -79,9 +79,9 @@
                     android:textSize="13.3sp" />
 
             </LinearLayout>
-
-
         </ScrollView>
+
+
     </LinearLayout>
 
     <LinearLayout

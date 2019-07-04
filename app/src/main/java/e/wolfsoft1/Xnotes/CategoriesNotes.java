@@ -225,16 +225,16 @@ public class CategoriesNotes extends AppCompatActivity {
             public void onClick(View v) {
                 for (int i = 0; i < postModel.size(); i++) {
                     if (postModel.get(i).isSelected()) {
-
+                        notesAdapter.notifyDataSetChanged();
+//                        notesAdapter.deleteSelectedData(i);
+                        toolbar.setVisibility(View.VISIBLE);
+                        cardviewShowUpdates.setVisibility(View.GONE);
+                        notesAdapter.isLongClickEnabled = false;
+                        notesAdapter.notifyDataSetChanged();
+                        releseItem();
                     }
                 }
-                notesAdapter.notifyDataSetChanged();
-                notesAdapter.deleteSelectedData();
-                toolbar.setVisibility(View.VISIBLE);
-                cardviewShowUpdates.setVisibility(View.GONE);
-                notesAdapter.isLongClickEnabled = false;
-                notesAdapter.notifyDataSetChanged();
-                releseItem();
+
             }
         });
 

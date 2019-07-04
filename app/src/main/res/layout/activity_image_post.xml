@@ -19,6 +19,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never"
             android:scrollbars="none">
 
             <LinearLayout
@@ -38,29 +40,27 @@
                     android:layout_height="wrap_content"
                     android:background="#00000000"
                     android:fontFamily="@font/notoserif_bold"
+                    android:padding="10dp"
                     android:hint="Title Goes here"
                     android:maxLength="80"
                     android:textColor="#000000"
                     android:textColorHint="#7f7f7f"
                     android:textSize="16.7sp" />
 
-
                 <TextView
                     android:id="@+id/time_and_date_of_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text=""
                     android:textColor="#80000000"
                     android:textSize="12sp"
                     android:visibility="gone" />
 
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_marginTop="20sp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20sp"
                     android:background="#807f7f7f" />
 
@@ -75,17 +75,16 @@
                     android:lineSpacingExtra="5dp"
                     android:textColor="#000000"
                     android:textColorHint="#907f7f7f"
-                    android:textSize="13.3sp" />
+                    android:textSize="13.3sp"/>
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/upload_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp"
+                    android:adjustViewBounds="true"
                     android:elevation="5dp"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_launcher_background"
                     app:riv_border_color="#d3d3d3"
                     app:riv_border_width="1dp"

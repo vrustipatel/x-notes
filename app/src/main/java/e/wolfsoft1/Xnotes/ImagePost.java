@@ -137,15 +137,17 @@ public class ImagePost extends AppCompatActivity {
         postEditedTime.setText(strDate);
 
 
-        labelName.setText(" \"" + tag + "\" ");
-
         /*------------------------------------update image post----------------------------------------*/
 
         if (tag != null) {
 
-        } else {
-            addingNotesInLabel.setVisibility(View.GONE);
-            labelName.setVisibility(View.GONE);
+
+            Toast.makeText(this, tag, Toast.LENGTH_SHORT).show();
+            addingNotesInLabel.setVisibility(View.VISIBLE);
+            labelName.setVisibility(View.VISIBLE);
+
+            labelName.setText(" \"" + tag + "\" ");
+
         }
 
         mImageView.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +196,6 @@ public class ImagePost extends AppCompatActivity {
                             public void onSuccess(Uri downloadUrl) {
 
                                 String imageurl = downloadUrl.toString();
-
                                 newkey = mDatabaseReference.push().getKey();
 
                                 title = mEditTextFileName.getText().toString();
@@ -204,12 +205,12 @@ public class ImagePost extends AppCompatActivity {
 
                                 if (key != null) {
 
-                                    imagePostModel = new NotePostModel(title, content, key, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null, null);
+                                    imagePostModel = new NotePostModel(title, content, key, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null);
                                     mDatabaseReference.child(firebaseUser.getUid()).child(key).setValue(imagePostModel);
 
 
                                 } else {
-                                    imagePostModel = new NotePostModel(title, content, newkey, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null, null);
+                                    imagePostModel = new NotePostModel(title, content, newkey, imageurl, null, 0, 0, color, "2", tag, date, labelKey, null);
                                     mDatabaseReference.child(firebaseUser.getUid()).child(newkey).setValue(imagePostModel);
                                 }
                                 if (tag != null) {
@@ -258,6 +259,7 @@ public class ImagePost extends AppCompatActivity {
     }
 
     private void deleteExistPost() {
+
         slideDialog = new Dialog(ImagePost.this, R.style.CustomDialogAnimation);
         Window window = slideDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
@@ -283,13 +285,14 @@ public class ImagePost extends AppCompatActivity {
     }
 
     private void deleteImageNote() {
-        mDatabaseReference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabaseReference.child(mAuth.getCurrentUser().getUid()).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 NotePostModel model = dataSnapshot.getValue(NotePostModel.class);
                 DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(mAuth.getCurrentUser().getUid());
                 trashReference.child(key).setValue(model);
+
             }
 
             @Override
@@ -297,6 +300,23 @@ public class ImagePost extends AppCompatActivity {
 
             }
         });
+
+//        mDatabaseReference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                NotePostModel model = dataSnapshot.getValue(NotePostModel.class);
+//                DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(mAuth.getCurrentUser().getUid());
+//                trashReference.child(key).setValue(model);
+//
+//                Toast.makeText(ImagePost.this, key, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         if (!isExist) {
 
@@ -332,7 +352,7 @@ public class ImagePost extends AppCompatActivity {
                     .start(ImagePost.this);
 
 
-        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mImageUri = result.getUri();
@@ -340,7 +360,7 @@ public class ImagePost extends AppCompatActivity {
                 Picasso.with(ImagePost.this)
                         .load(mImageUri)
                         .into(mImageView);
-                Log.e("aaa", "mImageUri");
+
             }
         }
     }
@@ -431,19 +451,19 @@ public class ImagePost extends AppCompatActivity {
             finish();
 
         } else if (mImageUri != null) {
+
             uploadImage();
 
             Intent intent = new Intent(ImagePost.this, MainActivity.class);
 
             if (mProgress != null) {
                 intent.putExtra("progress", "10");
+                intent.putExtra("labelTag", tag);
 
             }
-            finish();
             startActivity(intent);
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

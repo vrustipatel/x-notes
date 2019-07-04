@@ -33,14 +33,12 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
     Context context;
     ArrayList<ModifyLabelModeL> editLabelModeLS;
-    Boolean isNavDrawer;
     Boolean isEnable;
 
     FirebaseAuth fAuth;
     String data;
     private DatabaseReference fNoteLabelsDBref, fNotesDBref;
     Intent intent;
-    private String text;
 
     public ModifyLabelAdapter(Context context, ArrayList<ModifyLabelModeL> editLabelModeLS, Boolean isEnable) {
 
@@ -106,7 +104,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
 //                    set the new task and clear flags
 
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);
 
                     ((MainActivity) context).closeDrawer();

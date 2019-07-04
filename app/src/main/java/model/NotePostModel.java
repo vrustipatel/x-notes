@@ -10,13 +10,13 @@ public class NotePostModel implements Parcelable {
     private long timeLengthMinutes, timeLengthSeconds;
     private String selectColorImg;
     private String selectinput, labelTag;
-    private String date,fontStyleTitle,fontStyleContent;
+    private String date, recordedVoiceUrl;
     String labelKey;
-    public boolean selected = false;
+    private boolean selected = false;
 
 //
 
-    public NotePostModel(String title, String content, String key, String mImageUrl, String record, long timeLengthMinutes, long timeLengthSeconds, String selectColorImg, String selectinput, String labelTag, String date, String labelKey, String fontStyleTitle, String fontStyleContent) {
+    public NotePostModel(String title, String content, String key, String mImageUrl, String record, long timeLengthMinutes, long timeLengthSeconds, String selectColorImg, String selectinput, String labelTag, String date, String labelKey, String recordedVoiceUrl) {
         this.title = title;
         this.content = content;
         this.key = key;
@@ -30,22 +30,21 @@ public class NotePostModel implements Parcelable {
         this.date = date;
         this.selected = selected;
         this.labelKey = labelKey;
-        this.fontStyleTitle = fontStyleTitle;
-        this.fontStyleContent = fontStyleContent;
+        this.recordedVoiceUrl = recordedVoiceUrl;
     }
 
-    public NotePostModel(String title, String key, String record, long timeLengthMinutes, long timeLengthSeconds, String selectinput, String labelTag, String date, String labelKey, boolean selected) {
-        this.title = title;
-        this.key = key;
-        this.record = record;
-        this.timeLengthMinutes = timeLengthMinutes;
-        this.timeLengthSeconds = timeLengthSeconds;
-        this.selectinput = selectinput;
-        this.labelTag = labelTag;
-        this.date = date;
-        this.labelKey = labelKey;
-        this.selected = selected;
-    }
+//    public NotePostModel(String title, String key, String record, long timeLengthMinutes, long timeLengthSeconds, String selectinput, String labelTag, String date, String labelKey, boolean selected) {
+//        this.title = title;
+//        this.key = key;
+//        this.record = record;
+//        this.timeLengthMinutes = timeLengthMinutes;
+//        this.timeLengthSeconds = timeLengthSeconds;
+//        this.selectinput = selectinput;
+//        this.labelTag = labelTag;
+//        this.date = date;
+//        this.labelKey = labelKey;
+//        this.selected = selected;
+//    }
 
     public NotePostModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -63,8 +62,8 @@ public class NotePostModel implements Parcelable {
         selectColorImg = in.readString();
         labelTag = in.readString();
         date = in.readString();
-        fontStyleTitle = in.readString();
-        fontStyleContent = in.readString();
+        recordedVoiceUrl = in.readString();
+        recordedVoiceUrl = in.readString();
 
     }
 
@@ -191,20 +190,12 @@ public class NotePostModel implements Parcelable {
     }
 
 
-    public String getFontStyleTitle() {
-        return fontStyleTitle;
+    public String getRecordedVoiceUrl() {
+        return recordedVoiceUrl;
     }
 
-    public void setFontStyleTitle(String fontStyleTitle) {
-        this.fontStyleTitle = fontStyleTitle;
-    }
-
-    public String getFontStyleContent() {
-        return fontStyleContent;
-    }
-
-    public void setFontStyleContent(String fontStyleContent) {
-        this.fontStyleContent = fontStyleContent;
+    public void setRecordedVoiceUrl(String recordedVoiceUrl) {
+        this.recordedVoiceUrl = recordedVoiceUrl;
     }
 
     @Override
@@ -218,8 +209,7 @@ public class NotePostModel implements Parcelable {
         dest.writeString(selectColorImg);
         dest.writeString(labelTag);
         dest.writeString(date);
-        dest.writeString(fontStyleTitle);
-        dest.writeString(fontStyleContent);
+        dest.writeString(recordedVoiceUrl);
 
     }
 }

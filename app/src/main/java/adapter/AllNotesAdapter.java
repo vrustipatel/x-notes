@@ -111,6 +111,7 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
         final String record = noteModel.getRecord();
         final String selectinput = noteModel.getSelectinput();
         final String label = noteModel.getLabelTag();
+        final String input = noteModel.getSelectinput();
 
         if (label != null) {
 
@@ -164,28 +165,31 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             viewHolder.timeLength.setVisibility(View.VISIBLE);
 
             if (!isLongClickEnabled) {
-
+                viewHolder.linearLayout.setBackgroundResource(0);
+                viewHolder.linearLayout.setBackgroundColor(Color.parseColor("#fdcee7"));
             } else {
                 if (noteModel.isSelected()) {
                     viewHolder.linearLayout.setBackgroundResource(R.drawable.gray_rect);
                 } else {
                     viewHolder.linearLayout.setBackgroundResource(0);
-                    viewHolder.linearLayout.setBackgroundColor(Color.parseColor(color));
+                    viewHolder.linearLayout.setBackgroundColor(Color.parseColor("#fdcee7"));
                 }
             }
 
+            String min;
+
             if (noteModel.getTimeLengthMinutes() > 9) {
 
-                viewHolder.timeLength.setText(String.valueOf(voice));
+                min = String.valueOf(noteModel.getTimeLengthMinutes());
             } else {
 
-                viewHolder.timeLength.setText(String.valueOf("0" + voice));
+                min = "0" + String.valueOf(noteModel.getTimeLengthMinutes()) + ":";
             }
 
             if (noteModel.getTimeLengthSeconds() > 9) {
-                viewHolder.timeLength.setText(String.valueOf(voice));
+                viewHolder.timeLength.setText(min + String.valueOf(noteModel.getTimeLengthSeconds()));
             } else {
-                viewHolder.timeLength.setText(String.valueOf("0" + voice));
+                viewHolder.timeLength.setText(min + "0" + String.valueOf(noteModel.getTimeLengthSeconds()));
             }
 
             invisibleContent(viewHolder, noteModel);
@@ -255,16 +259,16 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
 
                     if (context instanceof TrashActivity) {
 
+                        viewHolder.itemView.setEnabled(false);
                         if (isLongClickEnabled != true) {
 
                         }
 
                     } else {
-
                         Intent intent = null;
                         if (!isLongClickEnabled) {
 
-                            if (!(image == null) && !(image.isEmpty())) {
+                            if (input.equals("2")) {
 
                                 intent = new Intent(context, ImagePost.class);
                                 intent.putExtra("key", key);
@@ -273,9 +277,11 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                                 intent.putExtra("image", image);
                                 intent.putExtra("color", color);
                                 intent.putExtra("selectinput", selectinput);
+                                intent.putExtra("labelTag", label);
+
                                 context.startActivity(intent);
 
-                            } else if ((!(content == null) && !(content.isEmpty())) || (!(title == null) && !(title.isEmpty()))) {
+                            } else if (input.equals("1")) {
 
                                 intent = new Intent(context, NotesPostActivity.class);
 
@@ -288,16 +294,24 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                                 intent.putExtra("labelTag", label);
                                 context.startActivity(intent);
 
-                            } else {
+                            } else if (input.equals("3")) {
 
-                                intent = new Intent(context, MainActivity.class);
+                                mProgress = new ProgressDialog(context);
 
-                                intent.putExtra("key", key);
-                                intent.putExtra("title", title);
-                                intent.putExtra("record", record);
-                                intent.putExtra("voice", voice);
-                                intent.putExtra("selectinput", selectinput);
-                                context.startActivity(intent);
+                                try {
+                                    PlaybackFragment playbackFragment =
+                                            new PlaybackFragment().newInstance(noteModelArrayList.get(i));
+
+                                    FragmentTransaction transaction = ((FragmentActivity) context)
+                                            .getSupportFragmentManager()
+                                            .beginTransaction();
+
+                                    playbackFragment.show(transaction, "dialog_playback");
+
+                                } catch (Exception e) {
+
+                                    Log.e(LOG_TAG, "exception", e);
+                                }
 
                             }
 
@@ -330,30 +344,9 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             });
 
 
-            viewHolder.record.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mProgress = new ProgressDialog(context);
-
-                    try {
-                        PlaybackFragment playbackFragment =
-                                new PlaybackFragment().newInstance(noteModelArrayList.get(i));
-
-                        FragmentTransaction transaction = ((FragmentActivity) context)
-                                .getSupportFragmentManager()
-                                .beginTransaction();
-
-                        playbackFragment.show(transaction, "dialog_playback");
-
-                    } catch (Exception e) {
-
-                        Log.e(LOG_TAG, "exception", e);
-
-                    }
-                }
-            });
-
         } else if (trashdata != null) {
+
+            viewHolder.itemView.setEnabled(false);
 
         }
 
@@ -387,46 +380,6 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
 
         return (noteModelArrayList == null) ? 0 : noteModelArrayList.size();
 
-    }
-
-    public void deleteSelectedData() {
-
-        for (int i = 0; i < noteModelArrayList.size(); i++) {
-
-            fAuth = FirebaseAuth.getInstance();
-            fNotesDatabase = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
-
-            if (noteModelArrayList.get(i).isSelected()) {
-                final String dkey = noteModelArrayList.get(i).getKey();
-
-                fNotesDatabase.child(dkey).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        NotePostModel model = dataSnapshot.getValue(NotePostModel.class);
-                        DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(fAuth.getCurrentUser().getUid());
-                        trashReference.child(dkey).setValue(model);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                fNotesDatabase.child(dkey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                        if (task.isSuccessful()) {
-                            Toast.makeText(context, "Note deleted", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "Error:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        }
     }
 
 

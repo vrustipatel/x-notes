@@ -56,7 +56,7 @@ public class NotesPostActivity extends AppCompatActivity {
     private DatabaseReference fNotesDBreference;
     private FirebaseAuth fAuth;
     RelativeLayout customView;
-    private String key, title, content, label, labelkey, date, nameoftag, fontStyleType;
+    private String key, title, content, label, labelkey;
     private boolean isExist;
     private Dialog slideDialog;
     private String tag;
@@ -117,7 +117,6 @@ public class NotesPostActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
-
 
         if (tag != null) {
 
@@ -245,10 +244,10 @@ public class NotesPostActivity extends AppCompatActivity {
         slideDialog.show();
         deletePost = slideDialog.findViewById(R.id.delete_post_linear);
 
-
         deletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 deleteNote();
             }
         });
@@ -443,12 +442,15 @@ public class NotesPostActivity extends AppCompatActivity {
     private void deleteNote() {
 
         fNotesDBreference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 NotePostModel model = dataSnapshot.getValue(NotePostModel.class);
                 DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(fAuth.getCurrentUser().getUid());
                 trashReference.child(key).setValue(model);
+
+                Toast.makeText(NotesPostActivity.this, key, Toast.LENGTH_SHORT).show();
 
             }
 

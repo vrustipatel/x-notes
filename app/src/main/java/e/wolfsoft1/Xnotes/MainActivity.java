@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView search;
     EditText searchNotesTxt;
 
+    Boolean isRecording = false;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         /*----------------------------------get labelwise data like folder---------------------------*/
 
 
-//        drawerLayout.closeDrawer(navigationView);
+        //        drawerLayout.closeDrawer(navigationView);
 
         if (tag != null) {
 
@@ -350,13 +352,7 @@ public class MainActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                notesAdapter.isLongClickEnabled = false;
-                releseItem();
-                for (int i = 0; i < postModel.size(); i++) {
-                    postModel.get(i).setSelected(false);
-                }
-                notesAdapter.notifyDataSetChanged();
+                releaseItemData();
             }
         });
 
@@ -391,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(newintent);
 
+                releaseItemData();
 
             }
         });
@@ -402,18 +399,20 @@ public class MainActivity extends AppCompatActivity {
                     if (arePermissionsEnabled()) {
                         imageSelectionDialog();
                     } else {
-                        //            permissions = new String[]{Manifest.permission.CAMERA};
                         requestMultiplePermissions();
                     }
                 } else {
                     imageSelectionDialog();
                 }
+
+                releaseItemData();
             }
         });
 
         listOfText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intenttxt = new Intent(MainActivity.this, CategoriesNotes.class);
                 intenttxt.putExtra("textonly", "1");
                 startActivity(intenttxt);
@@ -469,6 +468,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     requestAudioPermission();
                 }
+
+                releaseItemData();
+
             }
 
         });
@@ -501,6 +503,17 @@ public class MainActivity extends AppCompatActivity {
         filter(searchNotesTxt.getText().toString());
     }
 
+    private void releaseItemData() {
+
+        notesAdapter.isLongClickEnabled = false;
+        releseItem();
+        for (int i = 0; i < postModel.size(); i++) {
+            postModel.get(i).setSelected(false);
+        }
+        notesAdapter.notifyDataSetChanged();
+
+    }
+
 
     /*---------------------------------Search notes--------------------------------*/
 
@@ -511,7 +524,6 @@ public class MainActivity extends AppCompatActivity {
             if ((model.getTitle() != null && model.getTitle().toLowerCase().contains(s.toLowerCase())) || (model.getContent() != null && model.getContent().toLowerCase().contains(s.toLowerCase()))) {
                 filteredlist.add(model);
             }
-
         }
         notesAdapter.updateData(filteredlist);
     }
@@ -582,7 +594,7 @@ public class MainActivity extends AppCompatActivity {
                     outStream = new FileOutputStream(String.format(cameraPath + "/Camera/%d.jpg", System.currentTimeMillis()));
                     outStream.write(byteArray);
                     outStream.close();
-//                    String pathimg = getRealPathFromURI(uri);
+                    //                    String pathimg = getRealPathFromURI(uri);
 
                     Intent intentIMG = new Intent(MainActivity.this, ImagePost.class);
                     intentIMG.putExtra("labelTag", tag);
@@ -598,8 +610,12 @@ public class MainActivity extends AppCompatActivity {
                 } finally {
                 }
             }
+            Log.e("aaa", "first");
 
-        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        }
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
 
             Uri mImageUri = data.getData();
 
@@ -607,7 +623,10 @@ public class MainActivity extends AppCompatActivity {
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .start(MainActivity.this);
 
-        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Log.e("aaa", " second");
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -671,42 +690,31 @@ public class MainActivity extends AppCompatActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/recorded_audio.mp3";
+        mFileName += "/" + UUID.randomUUID().toString() + ".mp3";
 
-//        mButtonRecord.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                isOnClicked = true;
-//            }
-//        });
-
-
-        mButtonRecord.setOnTouchListener(new View.OnTouchListener() {
-
+        mButtonRecord.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-//                if (isOnClicked == false) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    startRecording();
-                    Toast.makeText(MainActivity.this, "Recording Started.....", Toast.LENGTH_SHORT).show();
-//                    mRecordLable.setText("Recording Started.....");
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            public void onClick(View v) {
+                if (isRecording) {
+                    isRecording = false;
                     stopRecording();
                     Toast.makeText(MainActivity.this, "Recording Stop.....", Toast.LENGTH_SHORT).show();
 
+                } else {
+                    isRecording = true;
+                    startRecording();
+                    Toast.makeText(MainActivity.this, "Recording Started.....", Toast.LENGTH_SHORT).show();
+
                 }
-
-                return false;
             }
-
         });
 
         recordingDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                uploadAudio();
+                //                uploadAudio();
                 if (uri != null) {
+                    stopRecording();
                     uploadAudio();
                 } else {
                     Toast.makeText(MainActivity.this, "you have not make voice note", Toast.LENGTH_SHORT).show();
@@ -923,22 +931,59 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < postModel.size(); i++) {
+                for (int i = postModel.size() - 1; i >= 0; i--) {
                     if (postModel.get(i).isSelected()) {
+                        deleteSelectedData(i);
+
+                        postModel.remove(i);
+
+                        cardviewDrawer.setVisibility(View.VISIBLE);
+                        cardviewShowUpdates.setVisibility(View.GONE);
 
                     }
                 }
-
-                notesAdapter.notifyDataSetChanged();
-                notesAdapter.deleteSelectedData();
-                cardviewDrawer.setVisibility(View.VISIBLE);
-                cardviewShowUpdates.setVisibility(View.GONE);
                 notesAdapter.isLongClickEnabled = false;
                 notesAdapter.notifyDataSetChanged();
+
                 releseItem();
 
             }
         });
+    }
+
+    private void deleteSelectedData(int i) {
+        fAuth = FirebaseAuth.getInstance();
+        fNoteDBreference = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+
+        final String dkey = postModel.get(i).getKey();
+
+        fNoteDBreference.child(dkey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                NotePostModel model = dataSnapshot.getValue(NotePostModel.class);
+                DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(fAuth.getCurrentUser().getUid());
+                trashReference.child(dkey).setValue(model);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        fNoteDBreference.child(dkey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, String.valueOf(postModel.size()), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Error:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     public void releseItem() {
@@ -998,6 +1043,7 @@ public class MainActivity extends AppCompatActivity {
                 filepath.child(audio).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+
                         mProgress.dismiss();
                         Toast.makeText(MainActivity.this, "Uploading Finished...", Toast.LENGTH_SHORT).show();
 
@@ -1016,7 +1062,7 @@ public class MainActivity extends AppCompatActivity {
                         String strDate = dateFormat.format(dateandtime).toString();
                         postEditedTime.setText("Edited " + strDate);
 
-                        NotePostModel model = new NotePostModel(title, null, key, null, download, minutes, seconds, null, "3", tag, strDate, labelkey, null, null);
+                        NotePostModel model = new NotePostModel(title, null, key, null, download, minutes, seconds, null, "3", tag, strDate, labelkey, mFileName);
 
                         if (tag != null) {
                             labelTag.setVisibility(View.VISIBLE);
@@ -1024,9 +1070,7 @@ public class MainActivity extends AppCompatActivity {
                             labelTag.setVisibility(View.GONE);
                         }
 
-
                         recordDBreference.child(key).setValue(model);
-
                         Toast.makeText(MainActivity.this, "Uploading Finished...", Toast.LENGTH_SHORT).show();
 
                     }
@@ -1069,7 +1113,7 @@ public class MainActivity extends AppCompatActivity {
                         /*------------------------------- Action for 'NO' Button--------------------*/
 
                         dialog.cancel();
-//                        drawerLayout.closeDrawer(navigationView);
+                        //                        drawerLayout.closeDrawer(navigationView);
 
                     }
                 });
@@ -1094,6 +1138,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        notesAdapter.isLongClickEnabled = false;
+        releseItem();
+        for (int i = 0; i < postModel.size(); i++) {
+            postModel.get(i).setSelected(false);
+        }
+
+        notesAdapter.notifyDataSetChanged();
+
         if (tag != null) {
 
             finish();
@@ -1103,6 +1155,7 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(navigationView);
 
             /*--------Setting message manually and performing action on button click----------*/
+
 
             new AlertDialog.Builder(this)
                     .setTitle("Really Exit?")

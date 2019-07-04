@@ -17,7 +17,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -88,7 +90,6 @@ public class PlaybackFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_media_playback, null);
-
 
         mFileNameTextView = (TextView) view.findViewById(R.id.file_name_text_view);
         mFileLengthTextView = (TextView) view.findViewById(R.id.file_length_text_view);
@@ -229,9 +230,20 @@ public class PlaybackFragment extends DialogFragment {
         mPlayButton.setImageResource(R.drawable.ic_media_pause);
         mMediaPlayer = new MediaPlayer();
 
+        String record;
+        File file = new File(item.getRecordedVoiceUrl());
+
+        if (file.exists()){
+            record = item.getRecordedVoiceUrl();
+        }
+        else {
+            Toast.makeText(getContext(), "Please wait for streaming", Toast.LENGTH_SHORT).show();
+            record = item.getRecord();
+        }
+
 
         try {
-            mMediaPlayer.setDataSource(item.getRecord());
+            mMediaPlayer.setDataSource(record);
             mMediaPlayer.prepare();
             mSeekBar.setMax(mMediaPlayer.getDuration());
 
@@ -266,9 +278,20 @@ public class PlaybackFragment extends DialogFragment {
 
         mMediaPlayer = new MediaPlayer();
 
+        String record;
+        File file = new File(item.getRecordedVoiceUrl());
+
+        if (file.exists()){
+            record = item.getRecordedVoiceUrl();
+        }
+        else {
+            Toast.makeText(getContext(), "Please wait for streaming", Toast.LENGTH_SHORT).show();
+            record = item.getRecord();
+        }
+
         try {
 
-            mMediaPlayer.setDataSource(item.getRecord());
+            mMediaPlayer.setDataSource(record);
             mMediaPlayer.prepare();
             mSeekBar.setMax(mMediaPlayer.getDuration());
             mMediaPlayer.seekTo(progress);
