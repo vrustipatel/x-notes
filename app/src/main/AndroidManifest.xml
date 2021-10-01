@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="e.wolfsoft1.Xnotes">
+    package="e.vp.Xnotes">
 
     <uses-permission android:name="android.permission.read_contacts" />
     <uses-permission android:name="android.permission.read_phone_state" />
@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -32,38 +31,48 @@
         android:roundIcon="@drawable/logo"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SplashScreen">
+        <!--<activity android:name=".Temp">-->
+         <!---->
+
+        <!--</activity>-->
+        <activity android:name="e.vp.Xnotes.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TrashActivity" />
-        <activity android:name=".CategoriesNotes" />
-        <activity android:name=".GoogleSignin"></activity>
-        <activity android:name=".LabelCreation" /> <!-- <activity android:name=".Audio" /> -->
-        <activity android:name=".ImagePost" />
+        <activity android:name="e.vp.Xnotes.TrashActivity" />
+        <activity android:name="e.vp.Xnotes.CategoriesNotes" />
+        <activity android:name="e.vp.Xnotes.GoogleSignin" />
+        <activity android:name="e.vp.Xnotes.LabelCreation" /> <!-- <activity android:name=".Audio" /> -->
+        <activity android:name="e.vp.Xnotes.ImagePost" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value="e.wolfsoft1.Xnotes.MainActivity" />
+            android:value="e.vp.Xnotes.MainActivity" />
 
         <activity
-            android:name=".NotesPostActivity"
+            android:name="e.vp.Xnotes.NotesPostActivity"
+            android:configChanges="orientation|screenLayout|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="e.vp.Xnotes.MainActivity"
             android:configChanges="orientation|screenLayout|screenSize"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|screenLayout|screenSize"
-            android:windowSoftInputMode="adjustPan" />
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b9177326197956b0bb8ab898cd44b1b794af3b55"
+            />
+
     </application>
 
 </manifest>

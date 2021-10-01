@@ -12,15 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="13dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="Add image"
-        android:textColor="#000000"
-        android:textSize="15dp" />
+        android:text="@string/add_image"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
     <LinearLayout
         android:id="@+id/take_photo_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -35,10 +35,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="Take photo"
-            android:textColor="#000000"
+            android:text="@string/take_photo"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -46,7 +46,7 @@
         android:id="@+id/choose_img_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -61,10 +61,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="Choose image"
-            android:textColor="#000000"
+            android:text="@string/choose_image"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 

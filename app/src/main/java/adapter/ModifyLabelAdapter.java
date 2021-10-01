@@ -2,8 +2,6 @@ package adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,8 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import e.wolfsoft1.Xnotes.MainActivity;
-import e.wolfsoft1.Xnotes.R;
+import e.vp.Xnotes.MainActivity;
+import e.vp.Xnotes.R;
 import model.ModifyLabelModeL;
 
 public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.ViewHolder> {
@@ -34,7 +35,6 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
     Context context;
     ArrayList<ModifyLabelModeL> editLabelModeLS;
     Boolean isEnable;
-
     FirebaseAuth fAuth;
     String data;
     private DatabaseReference fNoteLabelsDBref, fNotesDBref;
@@ -76,6 +76,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
 
         /*---------------show content in navigation drawer------------------*/
 
+
         if (context instanceof MainActivity) {
 
             viewHolder.labelText.setVisibility(View.VISIBLE);
@@ -103,10 +104,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                     intent.putExtra("labelkey", key);
 
 //                    set the new task and clear flags
-
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);
-
                     ((MainActivity) context).closeDrawer();
 
                 }
@@ -116,7 +114,6 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
             paramscontent.setMargins(10, 0, 20, 0);
 
             viewHolder.labelCreated.setLayoutParams(paramscontent);
-
 
         } else {
 
@@ -182,6 +179,8 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                     @Override
                     public void onClick(View v) {
 
+                        resetdata(viewHolder);
+
                         editLabelModeLS.remove(i);
                         notifyItemRemoved(i);
                         notifyItemChanged(i, editLabelModeLS.size());
@@ -191,8 +190,36 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                    String labelKey = (String) snapshot.child("key").getValue();
-                                    fNotesDBref.child(labelKey).removeValue();
+                                    String labelkey = (String) snapshot.child("key").getValue();
+
+                                    String title = (String) snapshot.child("title").getValue();
+                                    String content = (String) snapshot.child("content").getValue();
+                                    String date = (String) snapshot.child("date").getValue();
+                                    String labelKey = (String) snapshot.child("labelKey").getValue();
+                                    String labelTag = (String) snapshot.child("labelTag").getValue();
+                                    String selectColorImg = (String) snapshot.child("selectColorImg").getValue();
+                                    String selectinput = (String) snapshot.child("selectinput").getValue();
+                                    boolean selected = (boolean) snapshot.child("selected").getValue();
+                                    long timeLengthMinutes = (long) snapshot.child("timeLengthMinutes").getValue();
+                                    long timeLengthSeconds = (long) snapshot.child("timeLengthSeconds").getValue();
+
+                                    DatabaseReference trashReference = FirebaseDatabase.getInstance().getReference().child("TrashData").child(fAuth.getCurrentUser().getUid()).child(labelKey);
+
+                                    trashReference.child("key").setValue(key);
+                                    trashReference.child("title").setValue(title);
+                                    trashReference.child("date").setValue(date);
+                                    trashReference.child("labelKey").setValue(labelKey);
+                                    trashReference.child("labelTag").setValue(labelTag);
+                                    trashReference.child("selectColorImg").setValue(selectColorImg);
+                                    trashReference.child("content").setValue(content);
+                                    trashReference.child("selectinput").setValue(selectinput);
+
+                                    trashReference.child("selected").setValue(selected);
+                                    trashReference.child("timeLengthMinutes").setValue(timeLengthMinutes);
+                                    trashReference.child("timeLengthSeconds").setValue(timeLengthSeconds);
+
+                                    fNotesDBref.child(labelkey).removeValue();
+
                                 }
                             }
 
@@ -209,14 +236,7 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                 viewHolder.done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        viewHolder.line1.setVisibility(View.GONE);
-                        viewHolder.line2.setVisibility(View.GONE);
-                        viewHolder.done.setVisibility(View.GONE);
-                        viewHolder.delete.setVisibility(View.GONE);
-                        viewHolder.tagLabel.setVisibility(View.VISIBLE);
-                        viewHolder.edit.setVisibility(View.VISIBLE);
-
+                        resetdata(viewHolder);
                         fNoteLabelsDBref.orderByChild("labelCreated").equalTo(data).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -257,17 +277,19 @@ public class ModifyLabelAdapter extends RecyclerView.Adapter<ModifyLabelAdapter.
                 });
 
             } else {
-
-                viewHolder.delete.setVisibility(View.GONE);
-                viewHolder.done.setVisibility(View.GONE);
-                viewHolder.tagLabel.setVisibility(View.VISIBLE);
-                viewHolder.edit.setVisibility(View.VISIBLE);
-                viewHolder.line1.setVisibility(View.GONE);
-                viewHolder.line2.setVisibility(View.GONE);
-
+                resetdata(viewHolder);
             }
         }
 
+    }
+
+    private void resetdata(ViewHolder viewHolder) {
+        viewHolder.line1.setVisibility(View.GONE);
+        viewHolder.line2.setVisibility(View.GONE);
+        viewHolder.done.setVisibility(View.GONE);
+        viewHolder.delete.setVisibility(View.GONE);
+        viewHolder.tagLabel.setVisibility(View.VISIBLE);
+        viewHolder.edit.setVisibility(View.VISIBLE);
     }
 
     @Override

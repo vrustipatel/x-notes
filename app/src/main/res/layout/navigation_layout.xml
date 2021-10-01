@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.navigation.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigationView"
@@ -16,9 +16,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:scrollbars="none">
 
@@ -53,7 +53,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -61,8 +61,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_medium"
-                                android:text="Rushabh Patel"
-                                android:textColor="#000000"
+                                android:text="@string/rushabh_patel"
+                                android:textColor="@color/black"
                                 android:textSize="19sp" />
 
                             <TextView
@@ -70,8 +70,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_medium"
-                                android:text="rushabhpatel381@gmail.com"
-                                android:textColor="#000000"
+                                android:text="@string/rushabhpatel381_gmail_com"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -88,7 +88,7 @@
                             android:layout_width="16sp"
                             android:layout_height="16dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/all_notes" />
 
@@ -97,29 +97,29 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp"
                             android:fontFamily="@font/sf_pro_display_bold"
-                            android:text="ALL NOTES"
-                            android:textColor="#000000"
+                            android:text="@string/all_notes"
+                            android:textColor="@color/black"
                             android:textSize="13.3sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="388dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
+                        android:layout_marginStart="12dp"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
+                            android:layout_marginStart="3dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/sf_pro_display_medium"
                             android:letterSpacing="0.0900"
-                            android:text="LABLES"
-                            android:textColor="#99000000"
+                            android:text="@string/lables"
+                            android:textColor="@color/blackcolor"
                             android:textSize="12sp" />
 
                         <TextView
@@ -129,17 +129,17 @@
                             android:fontFamily="@font/sf_pro_display_medium"
                             android:letterSpacing="0.0900"
                             android:padding="5dp"
-                            android:text="Edit"
-                            android:textColor="#d3d3d3"
+                            android:text="@string/edit"
+                            android:textColor="@color/gray"
                             android:textSize="12sp" />
 
                     </LinearLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerview_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="3dp"
+                        android:paddingStart="3dp"
                         android:clipToPadding="false"
                         android:layout_marginTop="2dp" />
 
@@ -161,13 +161,13 @@
                                 android:src="@drawable/ic_tag" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
+                                android:layout_marginStart="20dp"
                                 android:layout_weight="1"
                                 android:fontFamily="@font/roboto_black"
-                                android:text="+  Add New Label"
-                                android:textColor="#2412ff"
+                                android:text="@string/add_new_label"
+                                android:textColor="@color/blue"
                                 android:textSize="15sp" />
 
                             <ImageView
@@ -178,7 +178,7 @@
                                 android:src="@drawable/ic_arrow" />
                         </LinearLayout>
 
-                        <android.support.v7.widget.CardView
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/card_add_new_label"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -191,14 +191,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
-                                android:background="#00000000"
+                                android:background="@color/transparent"
                                 android:fontFamily="@font/sf_pro_display_semibold"
-                                android:hint="+  Add New Label"
-                                android:textColor="#000000"
-                                android:textColorHint="#2412ff"
+                                android:hint="@string/add_new_label"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/blue"
                                 android:textSize="14sp" />
 
-                        </android.support.v7.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
                     </FrameLayout>
 
@@ -206,7 +206,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginTop="15dp"
-                        android:background="#707070" />
+                        android:background="@color/darkgraycolor" />
 
                     <LinearLayout
                         android:id="@+id/list_of_text"
@@ -220,7 +220,7 @@
                             android:layout_width="15dp"
                             android:layout_height="16dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/notes" />
 
@@ -228,10 +228,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:fontFamily="@font/sf_pro_display_bold"
-                            android:text="NOTES"
-                            android:textColor="#000000"
+                            android:text="@string/notes"
+                            android:textColor="@color/black"
                             android:textSize="13.3sp" />
 
                     </LinearLayout>
@@ -247,7 +247,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/ic_picture" />
 
@@ -255,12 +255,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:fontFamily="@font/sf_pro_display_bold"
-                            android:text="IMAGES"
-                            android:textColor="#000000"
+                            android:text="@string/imagesstring"
+                            android:textColor="@color/black"
                             android:textSize="13.3sp" />
-
 
                     </LinearLayout>
 
@@ -275,7 +274,7 @@
                             android:layout_width="15dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/microphone" />
 
@@ -283,10 +282,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:fontFamily="@font/sf_pro_display_bold"
-                            android:text="AUDIO"
-                            android:textColor="#000000"
+                            android:text="@string/audio"
+                            android:textColor="@color/black"
                             android:textSize="13.3sp" />
 
                     </LinearLayout>
@@ -303,7 +302,7 @@
                             android:layout_width="16sp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/trash" />
 
@@ -311,33 +310,29 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:fontFamily="@font/sf_pro_display_bold"
-                            android:text="TRASH"
-                            android:textColor="#000000"
+                            android:text="@string/trash"
+                            android:textColor="@color/black"
                             android:textSize="13.3sp" />
 
                     </LinearLayout>
-
                 </LinearLayout>
-
-
             </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <TextView
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:background="#ffffff"
+            android:layout_marginStart="30dp"
+            android:background="@color/white"
             android:fontFamily="@font/sf_pro_display_bold"
             android:padding="15dp"
-            android:text="LOGOUT"
-            android:textColor="#FF0000"
+            android:text="@string/logout"
+            android:textColor="@color/red"
             android:textSize="13.5dp" />
 
     </LinearLayout>
 
-</android.support.design.widget.NavigationView>
+</com.google.android.material.navigation.NavigationView>

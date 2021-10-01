@@ -1,22 +1,13 @@
 package adapter;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,25 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import e.wolfsoft1.Xnotes.CategoriesNotes;
-import e.wolfsoft1.Xnotes.ImagePost;
-import e.wolfsoft1.Xnotes.MainActivity;
-import e.wolfsoft1.Xnotes.NotesPostActivity;
-import e.wolfsoft1.Xnotes.R;
-import e.wolfsoft1.Xnotes.TrashActivity;
-import e.wolfsoft1.Xnotes.fragments.PlaybackFragment;
+import e.vp.Xnotes.CategoriesNotes;
+import e.vp.Xnotes.ImagePost;
+import e.vp.Xnotes.MainActivity;
+import e.vp.Xnotes.NotesPostActivity;
+import e.vp.Xnotes.R;
+import e.vp.Xnotes.TrashActivity;
+import e.vp.Xnotes.fragments.PlaybackFragment;
 import model.NotePostModel;
 
 public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHolder> {
@@ -50,16 +38,11 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
     private static final String LOG_TAG = "FileViewerAdapter";
     String key;
     String trashdata;
-    FirebaseAuth fAuth;
-    private DatabaseReference fNotesDatabase;
     public Boolean isLongClickEnabled = false;
-
     private Context context;
     private ArrayList<NotePostModel> noteModelArrayList;
-
     private ProgressDialog mProgress;
     private int selecteditem;
-
 
     public AllNotesAdapter(Context context, ArrayList<NotePostModel> noteModelArrayList, String trashdata) {
         this.context = context;
@@ -101,7 +84,6 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
         }
 
         key = noteModel.getKey();
-        Log.e("aaa", "onBindViewHolder: " + noteModel.getSelectColorImg());
         final String key = noteModel.getKey();
         final String title = noteModel.getTitle();
         final String content = noteModel.getContent();
@@ -125,13 +107,14 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
         }
 
         LinearLayout.LayoutParams paramscontent = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramstitle = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         if (image != null) {
 
             viewHolder.imageView.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(noteModelArrayList.get(i).getmImageUrl())
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.placeholder)
                     .fit().centerCrop()
                     .into(viewHolder.imageView);
             viewHolder.record.setVisibility(View.GONE);
@@ -139,6 +122,8 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             viewHolder.content.setText(noteModel.getContent());
 
             paramscontent.setMargins(0, 15, 0, 30);
+            paramstitle.setMargins(0, 0, 0, 10);
+            viewHolder.title.setLayoutParams(paramstitle);
             viewHolder.content.setLayoutParams(paramscontent);
             viewHolder.linearLayout.setBackgroundColor(Color.parseColor(color));
 
@@ -256,13 +241,10 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (context instanceof TrashActivity) {
 
                         viewHolder.itemView.setEnabled(false);
-                        if (isLongClickEnabled != true) {
-
-                        }
+                        viewHolder.itemView.setLongClickable(false);
 
                     } else {
                         Intent intent = null;
@@ -329,7 +311,6 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                             } else if (noteModelArrayList.get(i).isSelected() == true) {
                                 noteModel.setSelected(false);
                                 selecteditem--;
-                                Toast.makeText(context, "you have not select data", Toast.LENGTH_SHORT).show();
                             }
 
                             if (noteModelArrayList.isEmpty()) {
@@ -338,7 +319,6 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
                         }
                     }
 
-//                    notifyItemRemoved(i);
                     notifyItemChanged(i);
                 }
             });
@@ -346,15 +326,11 @@ public class AllNotesAdapter extends RecyclerView.Adapter<AllNotesAdapter.ViewHo
 
         } else if (trashdata != null) {
 
+            isLongClickEnabled = false;
             viewHolder.itemView.setEnabled(false);
+            viewHolder.itemView.setLongClickable(false);
 
         }
-
-    }
-
-    private void deleteImageNote() {
-        fNotesDatabase.removeValue();
-
     }
 
     public void updateData(ArrayList<NotePostModel> datas) {

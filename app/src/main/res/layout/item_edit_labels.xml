@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/label_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,17 +23,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp">
+            android:layout_marginStart="8dp">
 
             <ImageView
                 android:id="@+id/tag_label"
                 android:layout_width="28dp"
                 android:layout_height="23dp"
                 android:layout_gravity="center"
-                android:scaleType="fitXY"
                 android:padding="5dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_tag"
-                android:tint="#454545" />
+                app:tint="#454545" />
 
             <ImageView
                 android:id="@+id/delete"
@@ -42,8 +43,8 @@
                 android:padding="6dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_delete"
-                android:tint="#454545"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="@color/black_shade" />
 
         </FrameLayout>
 
@@ -52,39 +53,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="9dp"
+            android:layout_marginStart="9dp"
             android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="@font/roboto_bold"
+            android:background="@color/transparent"
             android:ellipsize="end"
+            android:fontFamily="@font/roboto_bold"
             android:maxLength="70"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="New Ideas"
-            android:textColor="#000000"
+            android:text="@string/new_ideas"
+            android:textColor="@color/black"
             android:textSize="15sp" />
+
         <TextView
             android:id="@+id/label_created_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="9dp"
+            android:layout_marginStart="9dp"
             android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="@font/roboto_bold"
+            android:background="@color/transparent"
             android:ellipsize="end"
+            android:fontFamily="@font/roboto_bold"
             android:maxLength="200"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="New Ideas"
-            android:visibility="gone"
-            android:textColor="#000000"
-            android:textSize="15sp" />
+            android:text="@string/new_ideas"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="12dp">
+            android:layout_marginEnd="12dp">
 
             <ImageView
                 android:id="@+id/label_edit"
@@ -95,18 +98,18 @@
                 android:padding="7dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_edit"
-                android:tint="#000000" />
+                app:tint="@color/black" />
 
             <ImageView
                 android:id="@+id/doneitem"
                 android:layout_width="30dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:padding="5dp"
-                android:visibility="gone"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_tick" />
+                android:src="@drawable/ic_tick"
+                android:visibility="gone" />
 
         </FrameLayout>
 
@@ -116,7 +119,7 @@
         android:id="@+id/viewline2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#757575"
+        android:background="@color/gray"
         android:visibility="gone" />
 
 </LinearLayout>

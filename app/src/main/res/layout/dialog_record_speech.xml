@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="15dp"
-    android:background="#00000000"
+    android:background="@color/transparent"
     android:orientation="vertical"
     app:cardCornerRadius="9dp">
 
@@ -22,8 +22,8 @@
             android:layout_marginTop="20sp"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center"
-            android:text="RECORDING STARTED"
-            android:textColor="#000000"
+            android:text="@string/recording_started"
+            android:textColor="@color/black"
             android:textSize="16.7sp" />
 
         <EditText
@@ -31,22 +31,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:fontFamily="@font/roboto_regular"
             android:gravity="center"
-            android:hint="voice note preferences"
-            android:textColor="#000000"
-            android:textColorHint="#666666"
+            android:hint="@string/voice_note_preferences"
+            android:maxLength="30"
+            android:paddingTop="15dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/dark_shade"
             android:textSize="15sp" />
 
         <ImageButton
             android:id="@+id/record_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center"
-            android:background="#00000000"
+            android:background="@color/transparent"
+            android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/record" />
 
@@ -66,15 +68,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/gray_rect"
+            android:ellipsize="end"
             android:fontFamily="@font/roboto_regular"
+            android:maxLines="1"
             android:paddingLeft="8dp"
             android:paddingTop="3dp"
             android:paddingRight="8dp"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:paddingBottom="5dp"
-            android:text="label"
-            android:textColor="#454545"
+            android:text="@string/label"
+            android:textColor="@color/black_shade"
             android:textSize="13.7dp"
             android:visibility="visible" />
 
@@ -87,7 +89,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/green_rect"
             android:gravity="center"
-            android:text="DONE"
+            android:text="@string/done"
             android:textColor="#047b00"
             android:textSize="15dp" />
 
@@ -95,13 +97,10 @@
             android:id="@+id/time_and_date_of_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Date"
+            android:text="@string/date"
             android:textSize="12.3sp" />
 
     </LinearLayout>
-
-
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

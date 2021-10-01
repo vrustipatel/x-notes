@@ -33,19 +33,6 @@ public class NotePostModel implements Parcelable {
         this.recordedVoiceUrl = recordedVoiceUrl;
     }
 
-//    public NotePostModel(String title, String key, String record, long timeLengthMinutes, long timeLengthSeconds, String selectinput, String labelTag, String date, String labelKey, boolean selected) {
-//        this.title = title;
-//        this.key = key;
-//        this.record = record;
-//        this.timeLengthMinutes = timeLengthMinutes;
-//        this.timeLengthSeconds = timeLengthSeconds;
-//        this.selectinput = selectinput;
-//        this.labelTag = labelTag;
-//        this.date = date;
-//        this.labelKey = labelKey;
-//        this.selected = selected;
-//    }
-
     public NotePostModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }

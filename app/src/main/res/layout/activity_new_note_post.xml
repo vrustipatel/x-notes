@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingTop="5dp">
@@ -19,21 +19,20 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
+            android:fillViewport="true"
             android:overScrollMode="never"
-            android:fillViewport="true">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="13.3dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="13.3dp"
                 android:layout_marginBottom="10dp"
                 android:clipToPadding="false"
-                android:paddingBottom="50dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="50dp">
 
                 <EditText
                     android:id="@+id/new_note_title"
@@ -41,11 +40,11 @@
                     android:layout_height="wrap_content"
                     android:background="#00000000"
                     android:fontFamily="@font/notoserif_bold"
-                    android:padding="10dp"
-                    android:hint="Title Goes here"
+                    android:hint="@string/title_goes_here"
                     android:maxLength="80"
-                    android:textColor="#000000"
-                    android:textColorHint="#7f7f7f"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dark_gray"
                     android:textSize="16.7sp" />
 
                 <TextView
@@ -53,29 +52,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:text=""
-                    android:textColor="#80000000"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/gray_shade"
                     android:textSize="12sp"
                     android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20sp"
-                    android:background="#807f7f7f" />
+                    android:background="@color/gray_shade" />
 
                 <EditText
                     android:id="@+id/new_note_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#00000000"
+                    android:layout_marginStart="10dp"
+                    android:background="@color/transparent"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="top"
-                    android:hint="Enter your description here"
+                    android:hint="@string/enter_your_description_here"
                     android:lineSpacingExtra="5dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#907f7f7f"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grayshade"
                     android:textSize="13.3sp" />
 
             </LinearLayout>
@@ -87,14 +88,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
+        android:background="@color/transparent"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="17dp">
+            android:paddingStart="17dp">
 
             <TextView
                 android:id="@+id/adding_notes_in_label"
@@ -102,31 +103,30 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_regular"
-                android:text="Adding your note in Label"
-                android:textColor="#666666"
+                android:text="@string/adding_your_note_in_label"
+                android:textColor="@color/dark_shade"
                 android:textSize="11.7sp"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tag_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:fontFamily="@font/roboto_regular"
-                android:singleLine="true"
-                android:text="label"
                 android:maxLength="30"
-                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="@string/label"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
-
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/select_clr_recy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,7 +136,5 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp" />
 
-
     </LinearLayout>
-
 </LinearLayout>

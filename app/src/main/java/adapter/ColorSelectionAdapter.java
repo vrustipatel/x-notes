@@ -3,19 +3,18 @@ package adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
-import e.wolfsoft1.Xnotes.ImagePost;
-import e.wolfsoft1.Xnotes.NotesPostActivity;
-import e.wolfsoft1.Xnotes.R;
+import e.vp.Xnotes.ImagePost;
+import e.vp.Xnotes.NotesPostActivity;
+import e.vp.Xnotes.R;
 import model.ColorSelectionModel;
 
 public class ColorSelectionAdapter extends RecyclerView.Adapter<ColorSelectionAdapter.ViewHolder> {
